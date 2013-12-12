@@ -64,12 +64,9 @@ class NodeBindDirective {
         scope.$watch(expression.eval, (value, _) => box.value = value,
             '$attr=$value');
       } else {
-        var sb = new StringBuffer();
-        value.splitMapJoin(_INTERPOLATE_REGEXP,
-            onMatch: (Match m) => sb.write('{{${m[1]}}}'),
-            onNonMatch: (s) => sb.write(s)
-        );
-        var interpolation = interpolate(sb.toString());
+        var curlies = value.splitMapJoin(_INTERPOLATE_REGEXP,
+            onMatch: (m) => '{{${m[1]}}}');
+        var interpolation = interpolate(curlies);
         interpolation.setter = (text) => box.value = text;
         scope.$watchSet(interpolation.watchExpressions, interpolation.call,
             '$attr=$value');
