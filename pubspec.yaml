@@ -1,5 +1,5 @@
 name: angular_node_bind
-version: 0.1.0
+version: 0.1.1
 author: Dart Authors <misc@dartlang.org>
 description: Utilities to allow Angular templates to use Node.bind()
 homepage: https://github.com/dart-lang/angular_node_bind

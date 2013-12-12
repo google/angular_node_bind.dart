@@ -3,12 +3,12 @@ Angular Node Bind
 
 Utilities to allow Angular templates to use `Node.bind()`.
 
-##NodeBindDirective
+###NodeBindDirective
 
-`NodeBindDirective` (in `lib/node_bind_directive.dart`) lets you use
-[Node.bind()][1] in an Angular app. This means that you can bind to custom
-elements, including [Polymer][2] elements. The bindings are declared by
-expressions in attribute values surrounded by double-square-brackets, like so:
+`NodeBindDirective` lets you use [Node.bind()][1] in an Angular app. This means
+that you can bind to custom elements, including [Polymer][2] elements. The
+bindings are declared by expressions in attribute values surrounded by
+double-square-brackets, like so:
 
     <input value="[[ name ]]">
     

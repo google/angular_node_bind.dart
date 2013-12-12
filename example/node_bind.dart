@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angular/angular.dart';
-import 'package:angular_node_bind/node_bind_directive.dart';
+import 'package:angular_node_bind/angular_node_bind.dart';
 import 'package:polymer/polymer.dart';
 
 void main() {
