@@ -1,0 +1,30 @@
+
+body {
+  background-color: #F8F8F8;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 15px;
+}
+
+h1, p {
+  color: #333;
+}
+
+polymer-ui-collapsible {
+  margin-bottom: 2px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.polymer-ui-collapsible-header {
+  padding: 10px;
+  border-bottom: 1px solid #bcbcbc;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.content {
+  padding: 10px;
+}

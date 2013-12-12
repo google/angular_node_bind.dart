@@ -1,0 +1,95 @@
+<!--
+Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+for details. All rights reserved. Use of this source code is governed by a
+BSD-style license that can be found in the LICENSE file.
+-->
+
+<!DOCTYPE html>
+
+<html ng-app>
+  <head>
+    <meta charset="utf-8">
+    <title>Angular Node.bind Example</title>
+    <link rel="stylesheet" href="node_bind.css">
+    <link rel="import" href="packages/polymer_ui_elements/polymer_ui_accordion/polymer_ui_accordion.html">
+    <link rel="import" href="packages/polymer_ui_elements/polymer_ui_collapsible/polymer_ui_collapsible.html">
+    <link rel="import" href="packages/polymer_ui_elements/polymer_ui_ratings/polymer_ui_ratings.html">
+    <link rel="import" href="packages/polymer_ui_elements/polymer_ui_toggle_button/polymer_ui_toggle_button.html">
+    <link rel="stylesheet" href="packages/polymer_ui_elements/asset/basic.css">
+  </head>
+  <body>
+    <h1>NodeBindDirective Example</h1>
+    
+    <code>NodeBindDirective</code> lets you use
+    <a href="http://www.polymer-project.org/platform/node_bind.html">Node.bind()</a>
+    in an Angular app. This means that you can bind to custom elements, including
+    <a href="http://www.polymer-project.org/">Polymer</a> elements. The bindings
+    are declared by expressions in attribute values surrounded by
+    double-square-brackets, like so: <code>&lt;input value="[[ name ]]"&gt;</code>.
+    This declares that the expression <code>name</code> should be bound to the
+    <code>value</code> property of the element using Node.bind(). The advantage
+    of using Node.bind are:
+    <ul>
+      <li>
+        Node.bind() takes care of setting up the binding, including
+        two-way bindings, and we don't need directives per-attribute.
+      </li>
+      <li>
+        Custom Elements that expose properties will be properly bound, again
+        including two-way bindings. You can use the growing collection of
+        custom element libraries in your app.
+      </li>
+    </ul>
+    
+    <p>
+      First, let's use a <code>&lt;polymer-ui-accordion&gt;</code> from the
+      <a href="https://github.com/ErikGrimes/polymer_ui_elements">polymer-ui-elements</a>
+      to host our demos. The accordion doesn't have any interesting bindings, but
+      it's nice to show that we can use complex custom element containers in an
+      Angular template.
+    </p>
+    
+    <p>
+      Specific demos are in the accordion panes.
+    </p>
+    
+    <polymer-ui-accordion selected="0">
+      <polymer-ui-collapsible>
+        <div class="polymer-ui-collapsible-header">Built-in Elements</div>
+        <div class="content">
+          Here we bind the built-in &lt;input&gt; element to the expression
+          <code>name</code> multiple ways, using both Angular's ng-model
+          directive and the NodeBindDirective.
+          <div><code>name</code>: {{ name }}</div>
+          <div><code>ng-model="name"</code>: <input type="text" ng-model="name"></div>
+          <div><code>value="[[ name ]]"</code>: <input type="text" value="[[ name ]]"></div>
+          <div><code>value="Hi [[ name ]]"</code>: <input type="text" value="Hi [[ name ]]"></div>
+          <p>
+            Note: There is a bug in Angular 0.9.2 where <code>no-model</code> steals
+            focus if the value has been changes though the model. This has been fixed
+            in the repository.
+          </p>
+        </div>
+      </polymer-ui-collapsible>
+      <polymer-ui-collapsible>
+        <div class="polymer-ui-collapsible-header">Custom Element Two-Way Binding</div>
+        <div class="content">
+          Here we two-way bind to a custom element property. In this case the
+          element is <code>polymer-ui-ratings</code> and we're binding to the
+          <code>value</code> property which is of type <code>int</code>.
+          <div><code>value</code>: {{ value }}</div>
+          <div><code>ng-model="value"</code>: <input type="number" ng-model="value"></div>
+          <polymer-ui-ratings value="[[ value ]]"></polymer-ui-ratings>
+          <p>
+            Note: There is a bug in Polymer where it is not type converting
+            bindings correctly, so setting the value from the <code>&lt;input&gt;</code>
+            is not working.
+          </p>
+        </div>
+      </polymer-ui-collapsible>
+    </polymer-ui-accordion>
+    
+    <script type="application/dart" src="node_bind.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
