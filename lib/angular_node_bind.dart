@@ -58,7 +58,7 @@ class NodeBindDirective {
       if (exprMatch != null) {
         var expr = exprMatch[1];
         Expression expression = parser(expr);
-        if (expression.assignable) {
+        if (expression.isAssignable) {
           box.changes.listen((_) => expression.assign(scope, box.value));
         }
         scope.$watch(expression.eval, (value, _) => box.value = value,
