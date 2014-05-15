@@ -6,15 +6,17 @@ library angular_node_bind;
 
 import 'dart:html';
 import 'package:angular/angular.dart';
+import 'package:angular/core/parser/syntax.dart' show Expression;
 import 'package:observe/observe.dart';
 import 'package:template_binding/template_binding.dart';
+import 'package:angular/core/module_internal.dart';
 
 /**
  * An Angular-DI module for installing [NodeBindDirective].
  */
 class NodeBindModule extends Module {
   NodeBindModule() {
-    type(NodeBindDirective);
+    bind(NodeBindDirective);
   }
 }
 
@@ -39,38 +41,74 @@ class NodeBindModule extends Module {
  * that create two-way bindings for important properties, like `value`.
  *
  */
-@NgDirective(selector: r'[*=/\[\[.*\]\]/]')
+@Decorator(selector: r'[*=/\[\[.*\]\]/]')
 class NodeBindDirective {
   static final RegExp _EXPR_REGEXP = new RegExp(r'^\[\[(.*)\]\]$');
   static final RegExp _INTERPOLATE_REGEXP = new RegExp(r'\[\[(.*)\]\]');
 
   NodeBindDirective(Node node, Interpolate interpolate, Parser parser,
-      Scope scope) {
+      Scope scope, FormatterMap formatterMap) {
 
     Element element = node;
     for (var attr in element.attributes.keys) {
       var value = element.attributes[attr];
       var exprMatch = _EXPR_REGEXP.firstMatch(value);
 
-      var box = new ObservableBox();
-      var binding = nodeBind(node).bind(attr, box, 'value');
+      var box = new ValueBindable();
+      var binding = nodeBind(node).bind(attr, box);
 
       if (exprMatch != null) {
         var expr = exprMatch[1];
         Expression expression = parser(expr);
         if (expression.isAssignable) {
-          box.changes.listen((_) => expression.assign(scope, box.value));
+          box.onChange = (v) => expression.assign(scope.context, v);
         }
-        scope.$watch(expression.eval, (value, _) => box.value = value,
-            '$attr=$value');
+        scope.watch(expr, box.update);
       } else {
-        var curlies = value.splitMapJoin(_INTERPOLATE_REGEXP,
-            onMatch: (m) => '{{${m[1]}}}');
-        var interpolation = interpolate(curlies);
-        interpolation.setter = (text) => box.value = text;
-        scope.$watchSet(interpolation.watchExpressions, interpolation.call,
-            '$attr=$value');
+        var interpolation = interpolate(value, false, '[[', ']]');
+        print("interpolation: $interpolation");
+        scope.watch(interpolation, box.update, formatters: formatterMap);
       }
     }
   }
+}
+
+typedef dynamic _Nullary();
+typedef dynamic _Unary(a);
+
+class ValueBindable implements Bindable {
+  var _value;
+  var callback;
+  var onChange;
+
+  @override
+  void close() {
+    callback = null;
+  }
+
+  @override
+  open(callback) {
+    this.callback = callback;
+    return _value;
+  }
+
+  void update(newValue, oldValue) {
+    _value = newValue;
+    if (callback != null) {
+      if (callback is _Nullary) {
+        callback();
+      } else if (callback is _Unary) {
+        callback(_value);
+      }
+    }
+  }
+
+  @override
+  set value(newValue) {
+    _value = newValue;
+    if (onChange != null) onChange(_value);
+  }
+
+  @override
+  get value => _value;
 }
