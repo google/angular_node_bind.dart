@@ -66,8 +66,8 @@ class NodeBindDirective {
         scope.watch(expr, box.update);
       } else {
         var interpolation = interpolate(value, false, '[[', ']]');
-        print("interpolation: $interpolation");
-        scope.watch(interpolation, box.update, formatters: formatterMap);
+        print("interpolation: $interpolation.expression");
+        scope.watch(interpolation.expression, box.update, formatters: formatterMap);
       }
     }
   }
