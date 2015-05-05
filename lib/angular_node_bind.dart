@@ -55,7 +55,7 @@ class NodeBindDirective {
       var exprMatch = _EXPR_REGEXP.firstMatch(value);
 
       var box = new ValueBindable();
-      var binding = nodeBind(node).bind(attr, box);
+      var binding = nodeBind(node).bind(attr.replaceFirst('bind-', ''), box);
 
       if (exprMatch != null) {
         var expr = exprMatch[1];
@@ -66,8 +66,8 @@ class NodeBindDirective {
         scope.watch(expr, box.update);
       } else {
         var interpolation = interpolate(value, false, '[[', ']]');
-        print("interpolation: $interpolation");
-        scope.watch(interpolation, box.update, formatters: formatterMap);
+        scope.watch(
+            interpolation.expression, box.update, formatters: formatterMap);
       }
     }
   }
